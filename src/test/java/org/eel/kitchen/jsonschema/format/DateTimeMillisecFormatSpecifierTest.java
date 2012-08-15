@@ -19,10 +19,13 @@ package org.eel.kitchen.jsonschema.format;
 
 import java.io.IOException;
 
+import org.eel.kitchen.util.NodeType;
+
 public class DateTimeMillisecFormatSpecifierTest extends AbstractFormatSpecifierTest {
 
     DateTimeMillisecFormatSpecifierTest()
             throws IOException {
-        super(DateTimeMillisecFormatSpecifier.getInstance(), "datetimemillisec");
+        super(DateTimeMillisecFormatSpecifier.getInstance(), "datetimemillisec",
+                NodeType.STRING);
     }
 }

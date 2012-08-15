@@ -19,7 +19,6 @@ package org.eel.kitchen.jsonschema.keyword;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.collect.ImmutableMap;
-import org.eel.kitchen.jsonschema.ValidationContext;
 import org.eel.kitchen.jsonschema.format.DateFormatSpecifier;
 import org.eel.kitchen.jsonschema.format.DateTimeFormatSpecifier;
 import org.eel.kitchen.jsonschema.format.DateTimeMillisecFormatSpecifier;
@@ -33,7 +32,8 @@ import org.eel.kitchen.jsonschema.format.RegexFormatSpecifier;
 import org.eel.kitchen.jsonschema.format.TimeFormatSpecifier;
 import org.eel.kitchen.jsonschema.format.URIFormatSpecifier;
 import org.eel.kitchen.jsonschema.format.UnixEpochFormatSpecifier;
-import org.eel.kitchen.jsonschema.util.NodeType;
+import org.eel.kitchen.jsonschema.main.ValidationContext;;
+import org.eel.kitchen.util.NodeType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -100,11 +100,8 @@ public final class FormatKeywordValidator
     protected void validate(final ValidationContext context,
         final JsonNode instance)
     {
-        if (specifier == null)
-            return;
-
-        final List<String> messages = new ArrayList<String>();
-        specifier.validate(messages, instance);
-        context.addMessages(messages);
+        if (specifier != null) {
+            specifier.validate(context, instance);
+        }
     }
 }

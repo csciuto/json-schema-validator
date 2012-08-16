@@ -18,11 +18,24 @@
 package org.eel.kitchen.jsonschema.keyword;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import org.eel.kitchen.jsonschema.format.*;
-import org.eel.kitchen.jsonschema.main.ValidationContext;
-import org.eel.kitchen.util.NodeType;
+import com.google.common.collect.ImmutableMap;
+import org.eel.kitchen.jsonschema.ValidationContext;
+import org.eel.kitchen.jsonschema.format.DateFormatSpecifier;
+import org.eel.kitchen.jsonschema.format.DateTimeFormatSpecifier;
+import org.eel.kitchen.jsonschema.format.EmailFormatSpecifier;
+import org.eel.kitchen.jsonschema.format.FormatSpecifier;
+import org.eel.kitchen.jsonschema.format.HostnameFormatSpecifier;
+import org.eel.kitchen.jsonschema.format.IPV4FormatSpecifier;
+import org.eel.kitchen.jsonschema.format.IPV6FormatSpecifier;
+import org.eel.kitchen.jsonschema.format.PhoneNumberFormatSpecifier;
+import org.eel.kitchen.jsonschema.format.RegexFormatSpecifier;
+import org.eel.kitchen.jsonschema.format.TimeFormatSpecifier;
+import org.eel.kitchen.jsonschema.format.URIFormatSpecifier;
+import org.eel.kitchen.jsonschema.format.UnixEpochFormatSpecifier;
+import org.eel.kitchen.jsonschema.util.NodeType;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -31,29 +44,42 @@ import java.util.Map;
  * <p>This keyword is scheduled for disappearance in draft v4. However,
  * some people have raised concerns about this.</p>
  *
+ * <p>All format specifiers fom draft v3 are supported except {@code style}
+ * and {@code color} (which validate an entire CSS 2.1 style and color
+ * respectively!).</p>
+ *
  * @see org.eel.kitchen.jsonschema.format
  */
 public final class FormatKeywordValidator
     extends KeywordValidator
 {
-    private static final Map<String, FormatSpecifier> specifiers
-        = new HashMap<String, FormatSpecifier>();
+    /**
+     * Static final map of all format specifiers. We choose to not allow to
+     * add new specifiers, even though it is theoretically possible (MAY in
+     * the draft).
+     */
+    private static final Map<String, FormatSpecifier> specifiers;
 
     static {
-        specifiers.put("date-time", DateTimeFormatSpecifier.getInstance());
-        specifiers.put("date", DateFormatSpecifier.getInstance());
-        specifiers.put("time", TimeFormatSpecifier.getInstance());
-        specifiers.put("utc-millisec", UnixEpochFormatSpecifier.getInstance());
-        specifiers.put("regex", RegexFormatSpecifier.getInstance());
-        specifiers.put("phone", PhoneNumberFormatSpecifier.getInstance());
-        specifiers.put("uri", URIFormatSpecifier.getInstance());
-        specifiers.put("email", EmailFormatSpecifier.getInstance());
-        specifiers.put("ip-address", IPV4FormatSpecifier.getInstance());
-        specifiers.put("ipv6", IPV6FormatSpecifier.getInstance());
-        specifiers.put("host-name", HostnameFormatSpecifier.getInstance());
-        
+        final ImmutableMap.Builder<String, FormatSpecifier> builder
+            = new ImmutableMap.Builder<String, FormatSpecifier>();
+
+        builder.put("date-time", DateTimeFormatSpecifier.getInstance());
+        builder.put("date", DateFormatSpecifier.getInstance());
+        builder.put("time", TimeFormatSpecifier.getInstance());
+        builder.put("utc-millisec", UnixEpochFormatSpecifier.getInstance());
+        builder.put("regex", RegexFormatSpecifier.getInstance());
+        builder.put("phone", PhoneNumberFormatSpecifier.getInstance());
+        builder.put("uri", URIFormatSpecifier.getInstance());
+        builder.put("email", EmailFormatSpecifier.getInstance());
+        builder.put("ip-address", IPV4FormatSpecifier.getInstance());
+        builder.put("ipv6", IPV6FormatSpecifier.getInstance());
+        builder.put("host-name", HostnameFormatSpecifier.getInstance());
+
         // Here is one special specifier for date-time with milliseconds
-        specifiers.put("date-time-ms", DateTimeMillisecFormatSpecifier.getInstance());
+        builder.put("date-time-ms", DateTimeMillisecFormatSpecifier.getInstance());
+
+        specifiers = builder.build();
     }
 
     private final FormatSpecifier specifier;
@@ -68,7 +94,11 @@ public final class FormatKeywordValidator
     protected void validate(final ValidationContext context,
         final JsonNode instance)
     {
-        if (specifier != null)
-            specifier.validate(context, instance);
+        if (specifier == null)
+            return;
+
+        final List<String> messages = new ArrayList<String>();
+        specifier.validate(messages, instance);
+        context.addMessages(messages);
     }
 }

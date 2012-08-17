@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, Francis Galiegue <fgaliegue@gmail.com>
+ * Copyright (c) 2012, Corey Sciuto <csciuto@constantcontact.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the Lesser GNU General Public License as
@@ -19,10 +19,14 @@ package org.eel.kitchen.jsonschema.format;
 
 import java.io.IOException;
 
-public class DateTimeMillisecFormatSpecifierTest extends AbstractFormatSpecifierTest {
+public class DateTimeMillisecFormatSpecifierTest
+    extends AbstractFormatSpecifierTest
+{
 
     DateTimeMillisecFormatSpecifierTest()
-            throws IOException {
-        super(DateTimeMillisecFormatSpecifier.getInstance(), "datetimemillisec");
+        throws IOException
+    {
+        super(DateTimeMillisecFormatSpecifier.getInstance(),
+            "datetimemillisec");
     }
 }

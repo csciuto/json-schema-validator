@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, Francis Galiegue <fgaliegue@gmail.com>
+ * Copyright (c) 2012, Corey Sciuto <csciuto@constantcontact.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the Lesser GNU General Public License as
@@ -18,7 +18,7 @@
 package org.eel.kitchen.jsonschema.format;
 
 /**
- * Validator for the {@code date-time-ms} custom format specification
+ * Validator for the custom {@code date-time-ms} format specification
  */
 public final class DateTimeMillisecFormatSpecifier
     extends AbstractDateFormatSpecifier
@@ -33,6 +33,6 @@ public final class DateTimeMillisecFormatSpecifier
 
     private DateTimeMillisecFormatSpecifier()
     {
-        super("yyyy-MM-dd'T'HH:mm:ss.SSSZ", "ISO 8601 date");
+        super("yyyy-MM-dd'T'HH:mm:ss.SSSZ", "ISO 8601 date (with milliseconds)");
     }
 }
